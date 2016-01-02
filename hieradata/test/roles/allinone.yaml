@@ -1,0 +1,21 @@
+---
+
+# Puppet agent
+puppet::agent: true
+puppet::service_name: 'puppet'
+#puppet::autosign: '$confdir/autosign.conf { mode = 664 }'
+#Recommanded not to signed all client certificates
+#https://docs.puppetlabs.com/puppet/latest/reference/config_file_autosign.html
+puppet::autosign: true
+puppet::codedir: '/etc/puppetlabs/code'
+puppet::logdir: '/var/log/puppetlabs/puppet'
+puppet::port: 8140
+puppet::puppetmaster: 'puppet'
+puppet::rundir: '/var/run/puppetlabs'
+puppet::runinterval: 1800
+puppet::server: false
+puppet::server_foreman: false
+puppet::server_implementation: 'puppetserver'
+puppet::splay: false
+puppet::splaylimit: 300
+puppet::vardir: '/opt/puppetlabs/puppet/cache'

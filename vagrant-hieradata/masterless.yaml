@@ -1,0 +1,5 @@
+puppet_env: featureVagrantPuppet
+hosts:
+  - name: puppet
+    memory: 2048
+    ip: 192.168.34.10

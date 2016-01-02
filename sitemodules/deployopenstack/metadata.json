@@ -1,0 +1,15 @@
+{
+  "name": "swartel-deployopenstack",
+  "version": "0.1.0",
+  "author": "Stephane Wartel",
+  "summary": "Deploy openstack site module",
+  "license": "Apache-2.0",
+  "source": "https://github.com/swartel/vagrant-puppet-openstack-integration",
+  "project_page": "https://github.com/swartel/vagrant-puppet-openstack-integration",
+  "issues_url": "https://github.com/swartel/vagrant-puppet-openstack-integration/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "data_provider": null
+}
+
