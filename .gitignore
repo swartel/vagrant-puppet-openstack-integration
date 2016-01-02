@@ -1,0 +1,8 @@
+.vagrant
+modules/
+.ruby-version
+junit/
+log/
+*.html
+*.swp
+*.bkp
