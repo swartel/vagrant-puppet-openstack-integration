@@ -5,6 +5,7 @@ vagrant-puppet-openstack-integration
 
 1. [Overview - What is Vagrant Puppet OpenStack Integration for?](#Overview)
 2. [Requirements - What do you need to start deploying your OpenStack?](#Requirements)
+3. [Deploy your base puppet environment](#Puppet deployment)
 
 Overview
 --------
@@ -88,6 +89,63 @@ Finally you need to build your own kvm box. In this example, we use a box
 located at /srv/storage/boxes/debian-jessie64-8.2.0-kvm.box and built using
 veewee (https://github.com/jedi4ever/veewee).
 Note that your box requires a user vagrant with sudo privileges to ALL.
+
+Puppet deployment
+-----------------
+
+In this project, vagrant data are stored in yaml files.
+The main data file is *vagrant.yaml* that can be overriden by file placed under
+*vagrant-hieradata* directory depending on the scenario you may use.
+
+For example, the override allinone.yaml help us to deploy a puppet server and one agent node:
+
+```bash
+puppet_env: featureVagrantPuppet
+hosts:
+  - name: puppet
+    ip: 192.168.34.10
+    memory: 2048
+  - name: host1
+    ip: 192.168.34.11
+    cpu: 1
+    memory: 2048
+    puppet_version: '1.3.2'
+```
+
+Its filename *allinone* has been chosen not to intend to deploy a puppet server
+and its agent itsef but to deploy a puppet server and another node called host1
+that should receive both controller and compute OpenStack role in futher step of
+this project.
+
+Note that:
+* puppet_version is not the binary version (puppet --version) but the
+package version of puppetlabs PC1 repository.
+* the puppet-server version is defined under vagrant.yaml at the top scope level.
+
+Before running into vagrant, just export this override:
+```bash
+export LOCAL_CONFIG=vagrant-hieradata/allinone.yaml
+```
+
+And let's rock!:
+```bash
+vagrant up --no-parallel
+```
+
+If everything goes well, you have now a puppet server including a puppetdb
+server required to use storeconfigs. Take a look at the dashboard:
+
+#http://puppet.vagrant.local:8080/pdb/dashboard/index.html
+
+You should get 2 nodes in the population.
+
+And a quick check on puppet server certification autority:
+
+```bash
+puppet cert list --all
++ "host1.vagrant.local"  (SHA256) 7B:21:56:7C:33:A4:94:83:B2:BA:32:CC:B0:1D:A5:C5:52:E4:CF:4A:F1:B2:A5:07:1D:F2:D6:17:77:7C:C7:C6
++ "puppet.vagrant.local" (SHA256) E6:89:12:53:D2:B2:CA:71:45:2B:DD:E5:50:F0:30:B5:60:FF:A3:F9:82:A7:E9:5B:DC:46:94:BD:0E:44:7E:29 (alt names: "DNS:puppet.vagrant.local", "DNS:puppet", "DNS:puppet.vagrant.local")
+```
 
 
 Work in progress so coming soon...
