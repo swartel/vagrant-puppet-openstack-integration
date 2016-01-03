@@ -50,7 +50,7 @@ export VAGRANT_DEFAULT_PROVIDER="libvirt"
 ```
 
 Ensure you get service libvirt-bin running.
-You need at lesat a pool storage named *default* and started:
+You need at least a pool storage named *default* and started:
 
 ```bash
 virsh pool-list
@@ -85,7 +85,7 @@ virsh net-edit vagrant_private_network
 Please refer to (http://wiki.libvirt.org/page/Networking) for more informations.
 
 Finally you need to build your own kvm box. In this example, we use a box 
-located at /srv/storage/boxes/debian-jessie64-8.2.0-kvm.box and built it using
+located at /srv/storage/boxes/debian-jessie64-8.2.0-kvm.box and built using
 veewee (https://github.com/jedi4ever/veewee).
 Note that your box requires a user vagrant with sudo privileges to ALL.
 
