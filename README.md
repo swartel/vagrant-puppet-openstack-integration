@@ -122,22 +122,23 @@ Note that:
 package version of puppetlabs PC1 repository.
 * the puppet-server version is defined under vagrant.yaml at the top scope level.
 
-Before running into vagrant, just export this override:
+Before running into vagrant, just export the override according to the scenario
+we need to test:
 ```bash
 export LOCAL_CONFIG=vagrant-hieradata/allinone.yaml
 ```
 
-And let's rock!:
+And let's rock !
 ```bash
 vagrant up --no-parallel
 ```
 
-If everything goes well, you have now a puppet server including a puppetdb
-server required to use storeconfigs. Take a look at the dashboard:
+If everything goes well, you should now have a puppet server 4.x including a puppetdb
+server as required to use storeconfigs. Take a look at the dashboard:
 
-#http://puppet.vagrant.local:8080/pdb/dashboard/index.html
+http://puppet.vagrant.local:8080/pdb/dashboard/index.html
 
-You should get 2 nodes in the population.
+You will find 2 nodes in the population.
 
 And a quick check on puppet server certification autority:
 
