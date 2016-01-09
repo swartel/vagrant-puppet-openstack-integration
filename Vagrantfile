@@ -26,7 +26,7 @@ end
 
 def loadConfiguration()
   config_filename = ENV['CONFIG'] || 'vagrant.yaml'
-  local_config_filename = ENV['LOCAL_CONFIG'] || 'local_vagrant.yaml'
+  local_config_filename = ENV['LOCAL_CONFIG']
   config_file = File.join( File.dirname(__FILE__), config_filename)
   local_config_file = File.join( File.dirname(__FILE__), local_config_filename)
   local_config = File.exist?(local_config_file) ? YAML::load_file(local_config_file) : {}
@@ -49,9 +49,9 @@ def checkForVagrantPlugins(plugins_list)
   end
 end
 
-# Check parameters and plugins depending to the provider used
+# Check parameters and plugins
 main_config = loadConfiguration()
-provider = 'virtualbox'
+provider = 'libvirt'
 has_provider_arg = ARGV.index {|s| s.include?('--provider')}
 
 if ARGV.include?('--provider=libvirt') ||
@@ -65,9 +65,9 @@ if ARGV.include?('--provider=libvirt') ||
   provider = 'libvirt'
 end
 
-if provider != 'virtualbox' && ARGV.include?('up')
+if provider == 'libvirt' && ARGV.include?('up')
   if not ARGV.include?('--no-parallel')
-    puts "You really want the machine not to be started in parallel. Please rerun with --no-parallel argument. #{provider}"
+    puts "You really need the machine not to be started in parallel. Please rerun with --no-parallel argument. #{provider}"
     exit
   end
 end
@@ -98,28 +98,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.hostmanager.ignore_private_ip = false
   config.hostmanager.include_offline = true
 
-  if provider == 'virtualbox'
-    config.vm.provider :virtualbox do |virtualbox, override|
-      # Every Vagrant virtual environment requires a box to build off of.
-      # This box must have puppet 3.3.1 already installed
-      override.vm.box = val(main_config, :image)
-
-      # The url from where the 'config.vm.box' box will be fetched if it
-      # doesn't already exist on the user's system.
-      # uncomment as soon as the box is uploaded
-      override.vm.box_url = "/srv/storage/boxes/#{val(main_config, :image)}.box"
-    end
-  end
-
-  if provider == 'libvirt'
-    config.vm.provider :libvirt do |libvirt, override|
-      libvirt.driver = 'kvm'
-      #libvirt.host = 'localhost'
-      libvirt.connect_via_ssh = false
-      libvirt.storage_pool_name = 'default'
-      override.vm.box = val(main_config, :image)
-      override.vm.box_url = "/srv/storage/boxes/#{val(main_config, :image)}-kvm.box"
-    end
+  # Provider: libvirt
+  config.vm.provider :libvirt do |libvirt, override|
+    libvirt.driver = 'kvm'
+    libvirt.connect_via_ssh = false
+    libvirt.storage_pool_name = 'default'
+    override.vm.box = val(main_config, :image)
+    override.vm.box_url = "/srv/storage/boxes/#{val(main_config, :image)}-kvm.box"
   end
 
   # Assume puppetmaster is first describe host
@@ -141,22 +126,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       client_config.vm.host_name = "#{node['name']}.#{val(main_config, :domain)}"
       shell_command = []
 
-      if provider == 'libvirt'
-        client_config.vm.provider :libvirt do |os_client, override|
-          override.vm.network :private_network, ip: "#{node['ip']}",
-            :libvirt__network_name => 'vagrant_private_network'
-          os_client.memory = node_val(node, main_config, :memory)
-          os_client.cpus = node_val(node, main_config, :cpu)
-        end
-      end
-      if provider == 'virtualbox'
-        client_config.vm.provider :virtualbox do |os_client, override|
-          # Create a private network, which allows host-only access to the machine
-          # using a specific IP.
-          override.vm.network :private_network, ip: "#{node['ip']}"
-          os_client.customize ['modifyvm', :id, '--memory', node_val(node, main_config, :memory)]
-          os_client.customize ['modifyvm', :id, '--cpus', node_val(node, main_config, :cpu)]
-        end
+      # Provider: libvirt
+      client_config.vm.provider :libvirt do |os_client, override|
+        override.vm.network :private_network, ip: "#{node['ip']}",
+          :libvirt__network_name => 'vagrant_private_network'
+        os_client.memory = node_val(node, main_config, :memory)
+        os_client.cpus = node_val(node, main_config, :cpu)
       end
 
       # Set parameter AptCatcher if set
