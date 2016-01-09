@@ -100,7 +100,7 @@ The main data file is *vagrant.yaml* that can be overriden by file placed under
 For example, the override allinone.yaml help us to deploy a puppet server and one agent node:
 
 ```bash
-puppet_env: featureVagrantPuppet
+puppet_env: master
 hosts:
   - name: puppet
     ip: 192.168.34.10

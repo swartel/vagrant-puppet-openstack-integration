@@ -1,4 +1,4 @@
-puppet_env: featureVagrantPuppet
+puppet_env: master
 hosts:
   - name: puppet
     ip: 192.168.34.10
