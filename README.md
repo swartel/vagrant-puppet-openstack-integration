@@ -140,7 +140,7 @@ http://puppet.vagrant.local:8080/pdb/dashboard/index.html
 
 You will find 2 nodes in the population.
 
-And a quick check on puppet server certification autority:
+And a quick check on puppet server certification authority:
 
 ```bash
 puppet cert list --all
