@@ -1,0 +1,32 @@
+---
+
+# Puppet server & agent
+puppet::agent: true
+puppet::service_name: 'puppet'
+#puppet::autosign: '$confdir/autosign.conf { mode = 664 }'
+#Recommanded not to signed all client certificates
+#https://docs.puppetlabs.com/puppet/latest/reference/config_file_autosign.html
+puppet::autosign: true
+puppet::codedir: '/etc/puppetlabs/code'
+puppet::hiera_config: '$codedir/hiera.yaml'
+puppet::logdir: '/var/log/puppetlabs/puppet'
+puppet::port: 8140
+puppet::rundir: '/var/run/puppetlabs'
+puppet::runinterval: 1800
+puppet::server: true
+puppet::server_envs_dir: '/etc/puppetlabs/code/environments'
+puppet::server_external_nodes: ''
+puppet::server_foreman: false
+puppet::server_implementation: 'puppetserver'
+puppet::server_jvm_min_heap_size: '512m'
+puppet::server_jvm_max_heap_size: '512m'
+puppet::server_jvm_extra_args: '-XX:MaxPermSize=256m'
+puppet::server_passenger: false
+puppet::server_reports: 'store,puppetdb'
+puppet::server_storeconfigs_backend: 'puppetdb'
+puppet::server_ssl_dir: '/etc/puppetlabs/puppet/ssl'
+puppet::show_diff: true
+puppet::splay: false
+puppet::splaylimit: 300
+#puppet::vardir: '/opt/puppetlabs/server/data/puppetserver'
+puppet::vardir: '/opt/puppetlabs/puppet/cache'
